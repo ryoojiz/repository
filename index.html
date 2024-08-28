@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tap Counter</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .box-container {
+            width: 80%;
+            margin: 10px 0;
+            text-align: center;
+            position: relative;
+        }
+        .title {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .box {
+            width: 100%;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #007BFF, #0056b3); /* Blue gradient */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 72px;
+            font-weight: bold; /* Bold font */
+            cursor: pointer;
+            user-select: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
+        }
+        .box:hover {
+            background: linear-gradient(135deg, #0056b3, #007BFF); /* Inverted gradient on hover */
+            transform: scale(1.05); /* Slightly enlarge the box */
+        }
+        .floating-text {
+            position: absolute;
+            color: #ffdd57;
+            font-size: 24px; /* Adjusted font size */
+            animation: floatUp 1s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translate(20px, 0); /* Start slightly to the right */
+            }
+            100% {
+                opacity: 0;
+                transform: translate(20px, -30px); /* Move up and slightly to the right */
+            }
+        }
+        .total-container {
+            width: 80%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .total {
+            font-size: 48px;
+            font-weight: bold; /* Bold font */
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="total-container">
+        <div class="title">Total</div>
+        <div id="total" class="total">0</div>
+    </div>
+    <div class="box-container">
+        <div class="title">Paslon 1</div>
+        <div class="box" onclick="incrementCount(1, 'Paslon 1')">0</div>
+    </div>
+    <div class="box-container">
+        <div class="title">Paslon 2</div>
+        <div class="box" onclick="incrementCount(2, 'Paslon 2')">0</div>
+    </div>
+    <div class="box-container">
+        <div class="title">Paslon 3</div>
+        <div class="box" onclick="incrementCount(3, 'Paslon 3')">0</div>
+    </div>
+
+    <!-- Audio element for sound effect -->
+    <audio id="click-sound" src="click-sound.mp3"></audio>
+
+    <script>
+        function incrementCount(boxNumber, title) {
+            const box = document.querySelectorAll('.box')[boxNumber - 1];
+            let count = parseInt(box.textContent);
+            count++;
+            box.textContent = count;
+
+            // Create a floating text element
+            const floatingText = document.createElement('div');
+            floatingText.className = 'floating-text';
+            floatingText.textContent = `+1 suara sah untuk ${title}`;
+            box.appendChild(floatingText);
+
+            // Position the floating text slightly to the side and up
+            floatingText.style.left = `60%`;  // Positioned slightly to the right
+            floatingText.style.top = `50%`;
+            floatingText.style.transform = `translate(-50%, -50%)`;
+
+            // Remove the floating text after the animation ends
+            floatingText.addEventListener('animationend', () => {
+                floatingText.remove();
+            });
+
+            // Play the sound effect
+            const sound = document.getElementById('click-sound');
+            sound.currentTime = 0; // Reset the playback time to the start
+            sound.play();
+
+            // Update total count
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const boxes = document.querySelectorAll('.box');
+            let total = 0;
+            boxes.forEach(box => {
+                total += parseInt(box.textContent);
+            });
+            document.getElementById('total').textContent = total;
+        }
+    </script>
+</body>
+</html>
